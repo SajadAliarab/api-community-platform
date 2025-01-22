@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\UserDetailController;
 use App\Http\Controllers\V1\FileController;
 use App\Http\Controllers\V1\ArticleController;
 use App\Http\Controllers\V1\TagController;
+use App\Http\Controllers\V1\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -57,7 +58,7 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::get('get-category/{categoryId}',[CategoryController::class,'show']);
         Route::put('update-category/{categoryId}',[CategoryController::class,'update']);
         Route::delete('delete-category/{categoryId}',[CategoryController::class,'destroy']);
-              
+
 
 
 });
