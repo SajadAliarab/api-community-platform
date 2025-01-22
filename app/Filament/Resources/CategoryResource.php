@@ -54,7 +54,6 @@ class CategoryResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
-                    ->primary()
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
