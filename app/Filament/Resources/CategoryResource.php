@@ -64,7 +64,7 @@ class CategoryResource extends Resource
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Created At')
-                    ->dateTime('j M y')
+                    ->dateTime('jS M y')
                     ->sortable(),
             ])
             ->filters([
