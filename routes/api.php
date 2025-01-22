@@ -51,6 +51,13 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::get('get-tag/{tagId}',[TagController::class,'show']);
         Route::put('update-tag/{tagId}',[TagController::class,'update']);
         Route::delete('delete-tag/{tagId}',[TagController::class,'destroy']);
+  //CategoryController
+        Route::get('get-categories',[CategoryController::class,'index']);
+        Route::post('create-category',[CategoryController::class,'store']);
+        Route::get('get-category/{categoryId}',[CategoryController::class,'show']);
+        Route::put('update-category/{categoryId}',[CategoryController::class,'update']);
+        Route::delete('delete-category/{categoryId}',[CategoryController::class,'destroy']);
+              
 
 
 });
