@@ -50,18 +50,18 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Column\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('name')
                     ->label('Name')
                     ->primary()
                     ->searchable()
                     ->sortable(),
-                Tables\Column\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable(),
-                Tables\Column\CheckboxColumn::make('active')
+                Tables\Columns\CheckboxColumn::make('active')
                     ->label('Active')
                     ->sortable(),
-                Tables\Column\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
                     ->sortable(),
