@@ -58,6 +58,7 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::get('get-category/{categoryId}',[CategoryController::class,'show']);
         Route::put('update-category/{categoryId}',[CategoryController::class,'update']);
         Route::delete('delete-category/{categoryId}',[CategoryController::class,'destroy']);
+        Route::get('get-subcategories/{categoryId}',[CategoryController::class,'getSubcategories']);
 
 
 

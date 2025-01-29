@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $categories = Category::query()->get()->all();
+            $categories = Category::whereNull('parent_id')->with('children')->get();
             if($categories!=null){
                 return response()->json([
                     'result'=>true,
@@ -44,7 +44,8 @@ class CategoryController extends Controller
                 'name' => 'required|string',
                 'slug' => 'required|string',
                 'description' => 'nullable|string',
-                'active' => 'required|boolean'
+                'active' => 'required|boolean',
+                'parent_id' => 'nullable|exists:categories,id',
             ]);
             try{
                 Category::query()->create($validatedData);
@@ -72,7 +73,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $category = Category::query()->find($id);
+            $category = Category::with(['parent', 'children'])->find($id);
             if($category!=null){
                 return response()->json([
                     'result'=>true,
@@ -102,9 +103,10 @@ class CategoryController extends Controller
             if($category){
                 $validatedData = $request->validate([
                     'name' => 'required|string',
-                    'slug' => 'required|string',
+                   'slug' => 'required|string|max:255|unique:categories,slug,' . $id,
                     'description' => 'nullable|string',
-                    'active' => 'required|boolean'
+                    'active' => 'required|boolean',
+                    'parent_id' => 'nullable|exists:categories,id|not_in:' . $id,
                 ]);
                 $category->update($validatedData);
                 return response()->json([
@@ -131,24 +133,60 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $category = Category::query()->find($id);
-            if($category){
-                $category->delete();
+            $category = Category::find($id);
+            if (!$category) {
                 return response()->json([
-                    'result'=>true,
-                    'message'=>'category deleted successfully'
-                ],200);
-            }else{
-                return response()->json([
-                    'result'=>false,
-                    'message'=>'category not found'
-                ],400);
+                    'result' => false,
+                    'message' => 'Category not found'
+                ], 404);
             }
-        }catch (\Exception $e){
+
+            // ✅ Check if category has subcategories before deleting
+            if ($category->children()->exists()) {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Cannot delete category with subcategories. Delete subcategories first.'
+                ], 400);
+            }
+
+            $category->delete();
+
             return response()->json([
-                'result'=>false,
-                'message'=>'An error occurred while deleting category: ' . $e->getMessage()
-            ],500);
+                'result' => true,
+                'message' => 'Category deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => false,
+                'message' => 'An error occurred while deleting category: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /* Get subcategories of a category */
+    public function getSubcategories($categoryId)
+    {
+        try {
+            $subcategories = Category::where('parent_id', $categoryId)->get();
+            if($subcategories->isEmpty()){
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Subcategories not found'
+                ], 404);
+            }else{
+
+            return response()->json([
+                'result' => true,
+                'message' => 'Subcategories retrieved successfully',
+                'data' => $subcategories
+            ], 200);
+        }
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => false,
+                'message' => 'An error occurred while fetching subcategories: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

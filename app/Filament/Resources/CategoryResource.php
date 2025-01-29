@@ -44,6 +44,11 @@ class CategoryResource extends Resource
                     ->label('Description')
                     ->placeholder('Enter the category description')
                     ->nullable(),
+                    Forms\Components\Select ::make('parent_id')
+                    ->label('Parent Category')
+                    ->placeholder('Select the parent category if exists')
+                    ->relationship('parent', 'name')
+                    ->nullable(),
                     Forms\Components\Checkbox::make('active')
                     ->label('Active')
             ]);
@@ -60,6 +65,10 @@ class CategoryResource extends Resource
                 TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable(),
+                TextColumn::make('parent.name')
+                    ->label('Parent Category')
+                    ->sortable()
+                    ->searchable(),
                CheckboxColumn::make('active')
                     ->label('Active')
                     ->sortable(),
@@ -69,7 +78,9 @@ class CategoryResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('parent_id')
+                     ->label('Filter by Parent Category')
+                     ->relationship('parent', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

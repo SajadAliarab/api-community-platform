@@ -16,4 +16,15 @@ class Category extends Model
     protected $casts = [
         'active' => 'boolean',
     ];
+        // Relationship: Get parent category
+        public function parent()
+        {
+            return $this->belongsTo(Category::class, 'parent_id');
+        }
+    
+        // Relationship: Get child subcategories
+        public function children()
+        {
+            return $this->hasMany(Category::class, 'parent_id');
+        }
 }
