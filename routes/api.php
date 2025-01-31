@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\FileController;
 use App\Http\Controllers\V1\ArticleController;
 use App\Http\Controllers\V1\TagController;
 use App\Http\Controllers\V1\CategoryController;
+use App\Http\Controllers\V1\TopicController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -59,7 +60,12 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::put('update-category/{categoryId}',[CategoryController::class,'update']);
         Route::delete('delete-category/{categoryId}',[CategoryController::class,'destroy']);
         Route::get('get-subcategories/{categoryId}',[CategoryController::class,'getSubcategories']);
-
+ //TopicController
+        Route::get('get-topics', [TopicController::class, 'index']);
+        Route::post('create-topic', [TopicController::class, 'store']);
+        Route::get('get-topic/{topicId}', [TopicController::class, 'show']);
+        Route::put('update-topic/{topicId}', [TopicController::class, 'update']);
+        Route::delete('delete-topic/{topicId}', [TopicController::class, 'destroy']);
 
 
 });
