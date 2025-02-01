@@ -9,6 +9,7 @@ use App\Http\Controllers\V1\ArticleController;
 use App\Http\Controllers\V1\TagController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\TopicController;
+use App\Http\Controllers\V1\CommentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -66,7 +67,11 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::get('get-topic/{topicId}', [TopicController::class, 'show']);
         Route::put('update-topic/{topicId}', [TopicController::class, 'update']);
         Route::delete('delete-topic/{topicId}', [TopicController::class, 'destroy']);
-
-
+ //CommentController
+        Route::get('get-comments/{modelType}/{topId}', [CommentController::class, 'index']);
+        Route::post('create-comment/{modelType}/{topicId}', [CommentController::class, 'store']);
+        Route::get('get-comment/{commentId}', [CommentController::class, 'show']);
+        Route::put('update-comment/{commentId}', [CommentController::class, 'update']);
+        Route::delete('delete-comment/{commentId}', [CommentController::class, 'destroy']);
 });
 

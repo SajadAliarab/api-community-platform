@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Reply;
 
 class Comment extends Model
 {
@@ -13,7 +15,8 @@ class Comment extends Model
         'commentable_id',
         'commentable_type',
         'content',
-        'like'
+        'like',
+        'active'
     ];
 
     public function user()
@@ -27,7 +30,7 @@ class Comment extends Model
     }
     public function replies()
     {
-        return $this->belongsToMany(Comment::class, 'comment_reply', 'comment_id', 'reply_id');
+        return $this->belongsToMany(Reply::class, 'comment_reply', 'comment_id', 'reply_id');
     }
 
 }

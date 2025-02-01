@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\CommentResource\Pages;
+use App\Filament\Resources\CommentResource\RelationManagers;
+use App\Models\Comment;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\IconColumn;
+
+
+
+class CommentResource extends Resource
+{
+    protected static ?string $model = Comment::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-bottom-center';
+    protected static ?string $navigationGroup = 'Forum';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Checkbox::make('active')
+                ->label('Active')
+                ->required(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('id')
+                    ->sortable(),
+                TextColumn::make('content')
+                    ->label('Content')
+                    ->limit(50)
+                    ->searchable(),
+                TextColumn::make('commentable_type')
+                    ->label('Model')
+                    ->searchable(),
+                TextColumn::make('commentable_id')
+                    ->label('Record ID')
+                    ->sortable(),
+                IconColumn::make('active')
+                    ->label('Active')
+                    ->boolean(),
+                TextColumn::make('created_at')
+                    ->dateTime('jS M y')
+                    ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('commentable_type')
+                    ->label('Filter by Model')
+                    ->options([
+                        \App\Models\Article::class => 'Article',
+                        \App\Models\Topic::class   => 'Topic',
+                      
+                    ]),
+            ])
+            ->actions([
+                // A custom action to toggle the active status.
+                Action::make('toggleActive')
+                    ->label(function (Comment $record): string {
+                        return $record->active ? 'Deactivate' : 'Activate';
+                    })
+                    ->action(function (Comment $record): void {
+                        $record->update(['active' => !$record->active]);
+                    })
+                    ->requiresConfirmation()
+                    ->color('primary'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                   
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListComments::route('/'),
+            'create' => Pages\CreateComment::route('/create'),
+            'edit' => Pages\EditComment::route('/{record}/edit'),
+        ];
+    }
+    public static function canCreate(): bool
+{
+    return false;
+}
+}
