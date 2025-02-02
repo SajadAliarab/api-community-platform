@@ -41,17 +41,21 @@ class CommentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->sortable(),
+               TextColumn::make('user.userName')
+                ->label('User')
+                ->sortable()
+                ->searchable(),
                 TextColumn::make('content')
                     ->label('Content')
                     ->limit(50)
                     ->searchable(),
                 TextColumn::make('commentable_type')
-                    ->label('Model')
+                    ->label('Section')
+                    ->formatStateUsing(fn (string $state) => class_basename($state))
                     ->searchable(),
                 TextColumn::make('commentable_id')
-                    ->label('Record ID')
+                    ->label('Section-Title')
+                    ->formatStateUsing(fn ($state, $record) => optional($record->commentable)->title ?? 'N/A')
                     ->sortable(),
                 IconColumn::make('active')
                     ->label('Active')
@@ -61,13 +65,13 @@ class CommentResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('commentable_type')
-                    ->label('Filter by Model')
+                Tables\Filters\SelectFilter::make('commentable_type')
+                    ->label('Section')
                     ->options([
-                        \App\Models\Article::class => 'Article',
-                        \App\Models\Topic::class   => 'Topic',
-                      
-                    ]),
+                        'App\Models\Topic' => 'Topic',
+                        'App\Models\Article' => 'Article',
+                    ])
+                    ->default('App\Models\Topic'),
             ])
             ->actions([
                 // A custom action to toggle the active status.
