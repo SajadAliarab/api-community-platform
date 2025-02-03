@@ -40,7 +40,7 @@ class CategoryResource extends Resource
                     ->required()
                     ->placeholder('Enter the category slug')
                     ->unique(ignoreRecord: true),
-                    Forms\Components\RichEditor::make('description')
+                    Forms\Components\Textarea::make('description')
                     ->label('Description')
                     ->placeholder('Enter the category description')
                     ->nullable(),

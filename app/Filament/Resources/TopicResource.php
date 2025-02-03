@@ -27,12 +27,12 @@ class TopicResource extends Resource
             ->schema([
             Forms\Components\Select::make('category_id')
                 ->label('Category')
-                ->options(\App\Models\Category::pluck('name', 'id'))
+                ->options(\App\Models\Category::where('active', true)->pluck('name', 'id'))
                 ->required(),
             Forms\Components\Hidden::make('user_id')
                 ->default(auth()->id()), 
             Forms\Components\TextInput::make('title')->required(),
-            Forms\Components\Textarea::make('content')->required(),
+            Forms\Components\RichEditor::make('content')->required(),
             Forms\Components\Checkbox::make('pinned'),
             Forms\Components\Checkbox::make('locked'),
             ]);
