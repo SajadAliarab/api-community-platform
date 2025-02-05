@@ -74,6 +74,7 @@ class CommentResource extends Resource
                     ->default('App\Models\Topic'),
             ])
             ->actions([
+                
                 // A custom action to toggle the active status.
                 Action::make('toggleActive')
                     ->label(function (Comment $record): string {

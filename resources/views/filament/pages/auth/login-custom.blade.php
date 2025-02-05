@@ -25,20 +25,9 @@
             </x-slot>
 
             admin@sajad.uk  <br>
-            expert@sajad.uk  <br>
-            user@sajad.uk  <br>
             Password : 123456789
         </x-filament::section>
-        <x-filament::button
-            href="https://community.sajad.uk"
-            tag="a"
-            color="warning"
-            icon="heroicon-m-home"
-
-        >
-            Back Home
-        </x-filament::button>
-
+        
 
         <x-filament-panels::form id="form" wire:submit="authenticate">
         {{ $this->form }}

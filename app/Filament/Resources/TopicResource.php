@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ViewAction;
+
 
 class TopicResource extends Resource
 {
@@ -67,6 +70,12 @@ class TopicResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                ViewAction::make(),
+                Action::make('viewComments')
+                    ->label('Manage Comments')
+                    ->icon('heroicon-o-chat-bubble-bottom-center')
+                    ->url(fn (Topic $record) => CommentResource::getUrl('index') . '?tableFilters[commentable_id][value]=' . $record->id)
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
