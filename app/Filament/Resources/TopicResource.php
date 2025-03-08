@@ -72,10 +72,15 @@ class TopicResource extends Resource
                 Tables\Actions\EditAction::make(),
                 ViewAction::make(),
                 Action::make('viewComments')
-                    ->label('Manage Comments')
-                    ->icon('heroicon-o-chat-bubble-bottom-center')
-                    ->url(fn (Topic $record) => CommentResource::getUrl('index') . '?tableFilters[commentable_id][value]=' . $record->id)
-                    ->openUrlInNewTab(),
+                ->label('Manage Comments')
+                ->icon('heroicon-o-chat-bubble-bottom-center')
+                ->url(function (Topic $record) {
+                    return CommentResource::getUrl('index', [
+                        'tableFilters[commentable_type][value]' => 'App\\Models\\Topic',
+                        'tableFilters[commentable_id][value]' => $record->id
+                    ]);
+                })
+                ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

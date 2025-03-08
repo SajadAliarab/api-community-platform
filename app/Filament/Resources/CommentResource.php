@@ -17,6 +17,8 @@ use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\Filter;
+
 
 
 
@@ -70,8 +72,20 @@ class CommentResource extends Resource
                     ->options([
                         'App\Models\Topic' => 'Topic',
                         'App\Models\Article' => 'Article',
+                    ]),
+                    Tables\Filters\Filter::make('commentable_id')
+                    ->form([
+                        Forms\Components\TextInput::make('value')
+                            ->label('Topic ID')
+                            ->numeric()
                     ])
-                    ->default('App\Models\Topic'),
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['value'],
+                            fn (Builder $query, $value): Builder => $query->where('commentable_id', $value)
+                                                                         ->where('commentable_type', 'App\\Models\\Topic')
+                        );
+                    }),
             ])
             ->actions([
                 
