@@ -78,7 +78,7 @@ class CommentController extends Controller
                     'content' => 'required',
                 ]);
                 $comment = $instance->comments()->create([
-                    'user_id' => '2',
+                    'user_id' => auth()->id(),
                     'content' => $validatedData['content']
                 ]);
                 return response()->json([

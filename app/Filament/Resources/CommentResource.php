@@ -83,7 +83,6 @@ class CommentResource extends Resource
                         return $query->when(
                             $data['value'],
                             fn (Builder $query, $value): Builder => $query->where('commentable_id', $value)
-                                                                         ->where('commentable_type', 'App\\Models\\Topic')
                         );
                     }),
             ])

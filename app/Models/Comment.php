@@ -30,7 +30,7 @@ class Comment extends Model
     }
     public function replies()
     {
-        return $this->belongsToMany(Reply::class, 'comment_reply', 'comment_id', 'reply_id');
+        return $this->hasMany(Reply::class);
     }
 
 }

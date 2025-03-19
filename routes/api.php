@@ -10,6 +10,7 @@ use App\Http\Controllers\V1\TagController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\TopicController;
 use App\Http\Controllers\V1\CommentController;
+use App\Http\Controllers\V1\ReplyController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -73,5 +74,10 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::get('get-comment/{commentId}', [CommentController::class, 'show']);
         Route::put('update-comment/{commentId}', [CommentController::class, 'update']);
         Route::delete('delete-comment/{commentId}', [CommentController::class, 'destroy']);
+//ReplyController
+        Route::get('get-replies/{commentId}', [ReplyController::class, 'index']);
+        Route::post('create-reply', [ReplyController::class, 'store']);
+        Route::put('update-reply/{replyId}', [ReplyController::class, 'update']);
+        Route::delete('delete-reply/{replyId}', [ReplyController::class, 'destroy']);        
 });
 
