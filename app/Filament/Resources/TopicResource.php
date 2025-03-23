@@ -74,6 +74,7 @@ class TopicResource extends Resource
                 Action::make('viewComments')
                 ->label('Manage Comments')
                 ->icon('heroicon-o-chat-bubble-bottom-center')
+                ->color('warning')
                 ->url(function (Topic $record) {
                     return CommentResource::getUrl('index', [
                         'tableFilters[commentable_type][value]' => 'App\\Models\\Topic',

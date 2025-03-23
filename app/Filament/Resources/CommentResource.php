@@ -18,6 +18,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Actions\ViewAction;
 
 
 
@@ -33,6 +34,9 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('content')
+                    ->label('Content')
+                    ->required(),
                 Forms\Components\Checkbox::make('active')
                 ->label('Active')
                 ->required(),
@@ -76,8 +80,7 @@ class CommentResource extends Resource
                     Tables\Filters\Filter::make('commentable_id')
                     ->form([
                         Forms\Components\TextInput::make('value')
-                            ->label('Topic ID')
-                            ->numeric()
+                            ->hidden(),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
@@ -88,22 +91,35 @@ class CommentResource extends Resource
             ])
             ->actions([
                 
-                // A custom action to toggle the active status.
+                ViewAction::make(),
                 Action::make('toggleActive')
                     ->label(function (Comment $record): string {
                         return $record->active ? 'Deactivate' : 'Activate';
                     })
+                    ->color (function (Comment $record): string {
+                        return $record->active ? 'danger' : 'success';
+                    })
                     ->action(function (Comment $record): void {
                         $record->update(['active' => !$record->active]);
                     })
-                    ->requiresConfirmation()
-                    ->color('primary'),
+                    ->requiresConfirmation(),
+                Action::make('viewReplies')
+                    ->label('Manage Replies')
+                    ->icon('heroicon-o-chat-bubble-bottom-center')
+                    ->color('warning')
+                    ->url(function (Comment $record) {
+                    return ReplyResource::getUrl('index', [
+                        'tableFilters[comment_id][value]' => $record->id
+                    ]);
+                })
+                ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                    
                 ]),
-            ]);
+            ])
+            ->recordUrl(null);
     }
 
     public static function getRelations(): array
