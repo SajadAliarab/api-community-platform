@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Tables\Columns\ImageColumn;
+
 
 class CategoryResource extends Resource
 {
@@ -49,6 +51,20 @@ class CategoryResource extends Resource
                     ->placeholder('Select the parent category if exists')
                     ->relationship('parent', 'name')
                     ->nullable(),
+                    Forms\Components\FileUpload::make('image')
+                    ->label('Image')
+                    ->placeholder('Upload an image for the category')
+                    ->image()
+                    ->directory('categories')
+                    ->preserveFilenames()
+                    ->imagePreviewHeight('150')
+                    ->required()
+                    ->disk('public')
+                    ->visibility('public')
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '16:9'
+                    ]),
                     Forms\Components\Checkbox::make('active')
                     ->label('Active')
             ]);
@@ -69,6 +85,12 @@ class CategoryResource extends Resource
                     ->label('Parent Category')
                     ->sortable()
                     ->searchable(),
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->size(50)
+                    ->circular()
+                    ->rounded(),
                CheckboxColumn::make('active')
                     ->label('Active')
                     ->sortable(),

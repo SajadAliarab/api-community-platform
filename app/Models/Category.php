@@ -12,6 +12,9 @@ class Category extends Model
         'name',
         'slug',
         'description',
+        'parent_id',
+        'active',
+        'image'
     ];
     protected $casts = [
         'active' => 'boolean',
@@ -25,6 +28,11 @@ class Category extends Model
         // Relationship: Get child subcategories
         public function children()
         {
-            return $this->hasMany(Category::class, 'parent_id');
+            return $this->
+            hasMany(Category::class, 'parent_id');
+        }
+        public function getImageUrlAttribute(): ?string
+        {
+            return $this->image ? asset("categories/{$this->image}") : null;
         }
 }
