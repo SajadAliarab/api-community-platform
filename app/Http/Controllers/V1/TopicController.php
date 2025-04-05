@@ -166,4 +166,28 @@ class TopicController extends Controller
             ],500);
         }
     }
+
+    public function getTopicsByCategory($categoryId)
+    {
+        try {
+            $topics = Topic::where('category_id', $categoryId)->with('user')->get();
+            if($topics!=null){
+                return response()->json([
+                    'result'=>true,
+                    'message'=>'topics received successfully',
+                    'data'=>$topics
+                ],200);
+            }else{
+                return response()->json([
+                    'result'=>false,
+                    'message'=>'there is not any topic',
+                ],400);
+            }
+        }catch (\Exception $e){
+            return response()->json([
+                'result'=>false,
+                'message'=>'An error occurred while getting topics by category: ' . $e->getMessage()
+            ],500);
+        }
+    }
 }

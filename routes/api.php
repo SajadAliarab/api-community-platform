@@ -57,17 +57,20 @@ Route::prefix('v1')->namespace('api\v1')->group(function (){
         Route::delete('delete-tag/{tagId}',[TagController::class,'destroy']);
   //CategoryController
         Route::get('get-categories',[CategoryController::class,'index']);
+        Route::get('get-active-categories',[CategoryController::class,'getActiveCategories']);
         Route::post('create-category',[CategoryController::class,'store']);
         Route::get('get-category/{categoryId}',[CategoryController::class,'show']);
         Route::put('update-category/{categoryId}',[CategoryController::class,'update']);
         Route::delete('delete-category/{categoryId}',[CategoryController::class,'destroy']);
         Route::get('get-subcategories/{categoryId}',[CategoryController::class,'getSubcategories']);
+        Route::get('get-category-slug/{categorySlug}',[CategoryController::class,'getActiveCategoriesBySlug']);
  //TopicController
         Route::get('get-topics', [TopicController::class, 'index']);
         Route::post('create-topic', [TopicController::class, 'store']);
         Route::get('get-topic/{topicId}', [TopicController::class, 'show']);
         Route::put('update-topic/{topicId}', [TopicController::class, 'update']);
         Route::delete('delete-topic/{topicId}', [TopicController::class, 'destroy']);
+        Route::get('get-topics-by-category/{categoryId}', [TopicController::class, 'getTopicsByCategory']);
  //CommentController
         Route::get('get-comments/{modelType}/{topId}', [CommentController::class, 'index']);
         Route::post('create-comment/{modelType}/{topicId}', [CommentController::class, 'store']);

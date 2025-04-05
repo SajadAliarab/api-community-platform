@@ -189,4 +189,63 @@ class CategoryController extends Controller
             ], 500);
         }
     }
+    public function getActiveCategoriesBySlug($slug)
+    {
+        try {
+            $categories = Category::where('slug', $slug)
+                ->where('active', true)
+                ->with(['children' => function ($query) {
+                $query->where('active', true);
+                }])
+                ->get();
+            if($categories->isEmpty()){
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Categories not found'
+                ], 404);
+            }else{
+            return response()->json([
+                'result' => true,
+                'message' => 'Categories retrieved successfully',
+                'data' => $categories
+            ], 200);
+        }
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => false,
+                'message' => 'An error occurred while fetching categories: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    public function getActiveCategories()
+    {
+        try {
+            $categories = Category::where('active', true)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->where('active', true);
+            }])
+            ->get();
+            if($categories->isEmpty()){
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Active categories not found'
+                ], 404);
+            }else{
+            return response()->json([
+                'result' => true,
+                'message' => 'Active categories retrieved successfully',
+                'data' => $categories
+            ], 200);
+        }
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'result' => false,
+                'message' => 'An error occurred while fetching active categories: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
 }
